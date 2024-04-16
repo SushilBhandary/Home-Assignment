@@ -1,13 +1,14 @@
 import React from 'react';
 import { FormHelperText, CircularProgress, Checkbox, ListItemText, OutlinedInput, Box, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
 
 interface FilterProps {
     handleChangeOfClean: () => void;
     selectedCategory: string;
-    handleChangeOfcategories: (event: React.ChangeEvent<{ value: unknown }>) => void;
+    handleChangeOfcategories: (event: SelectChangeEvent<string>) => void;
     categories: string[];
     selectedProduct: string[];
-    handleChangeOfProduct: (event: React.ChangeEvent<{ value: unknown }>) => void;
+    handleChangeOfProduct: (event: SelectChangeEvent<string[]>) => void
     products: { title: string }[];
     runReport: () => void;
     buttonDisabled: boolean;
@@ -46,7 +47,7 @@ const Filter: React.FC<FilterProps> = ({
                 labelId="demo-multiple-name-label"
                 id="demo-multiple-name"
                 value={selectedCategory}
-                onChange={ e => handleChangeOfcategories(e)}
+                onChange={ handleChangeOfcategories}
                 input={<OutlinedInput label="Name" />}
             >
                 {categories.map((name) => (
@@ -64,13 +65,11 @@ const Filter: React.FC<FilterProps> = ({
             <FormControl variant="filled" sx={{ m: 1, width: '80%'}}>
             <InputLabel id="demo-simple-select-filled-label">Select Product</InputLabel>
             <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-simple-select-disabled"
                 multiple
                 value={selectedProduct}
-                onChange={ e => handleChangeOfProduct(e)}
+                onChange={ handleChangeOfProduct}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(', ')}
+                renderValue={(selected: string[]) => selected.join(', ')}
             >
                 {products.map((name) => (
                 <MenuItem key={name.title} value={name.title}>

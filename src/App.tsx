@@ -20,21 +20,6 @@ interface Product {
   images: string[];
 }
 
-interface ProductsResponse {
-  products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
-}
-
-interface ChartConfig {
-  chart: { type: string };
-  title: { text: string };
-  xAxis: { categories: string[] };
-  yAxis: { title: { text: string } };
-  series: { name: string; data: number[] }[];
-}
-
 const chartOptions = {
   chart: {
     type: 'pie'
