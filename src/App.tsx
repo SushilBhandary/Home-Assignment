@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, FormHelperText, Checkbox, ListItemText, OutlinedInput, Box, Typography, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
+import { AppBar, FormHelperText, CircularProgress, Checkbox, ListItemText, OutlinedInput, Box, Typography, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 
 import './App.css';
@@ -112,6 +112,8 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<string[]>([]);
   const [ chart, setChart ] = useState<any>(chartOptions)
+  const [isLoading, setIsLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   const fetchCategories = async() => {
     await axios.get('https://dummyjson.com/products/categories')
@@ -135,6 +137,7 @@ function App() {
     setSelectedCategory(event.target.value as string);
     setSelectedProduct([])
     fetchProduct(event.target.value as string)
+    setButtonDisabled(false)
   };
 
   const handleChangeOfProduct = (event: SelectChangeEvent<typeof selectedProduct>) => {
@@ -145,6 +148,7 @@ function App() {
       typeof value === 'string' ? value.split(',') : value,
     );
     console.log(selectedProduct)
+    setButtonDisabled(false)
     
   };
 
@@ -153,9 +157,16 @@ function App() {
     setProducts([])
     setSelectedProduct([])
     setChart(chartOptions)
+    setButtonDisabled(true)
   }
 
   const runReport = () => {
+    setIsLoading(true); // Start loading
+    setButtonDisabled(true)
+    setTimeout(() => {
+      // Your existing logic here
+      setIsLoading(false); // Stop loading after 3 seconds
+    }, 3000);
     const data: number[] = []
     if (selectedProduct.length === 0) {
       const pro: string[] = []
@@ -255,7 +266,9 @@ function App() {
               </FormControl>
             </Container>
 
-            <Button sx={{  width: '80%'}} variant="contained" onClick={runReport}>Run Report</Button>
+            <Button sx={{ width: '80%' }} variant="contained" onClick={runReport} disabled={isLoading || buttonDisabled}>
+              {isLoading ? <CircularProgress size={24} /> : "Run Report"}
+            </Button>
           </Box>
         </Grid>
         <Grid item xs={8} sx={{ backgroundColor: 'lightcoral', width: '70vw', height:'100vh' ,display: 'flex',justifyContent: 'center', alignItems: 'center'}}>
