@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { AppBar, FormHelperText, CircularProgress, Checkbox, ListItemText, OutlinedInput, Box, Typography, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
-
-import './App.css';
-import {makeStyles} from '@mui/material'
 import axios from 'axios';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -204,15 +201,15 @@ function App() {
       </AppBar>
       <main>
       <Grid container >
-        <Grid item xs={4} sx={{
-            backgroundColor: 'lightblue',
+        <Grid item xs={12} sm={4} sx={{
             width: '30vw',
-            height: '100vh',
+            height: { xs: '70vh', sm: '100vh' },
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            paddingTop:{xs: '60px', sm: '20px'},
           }}>
-          <Box sx={{ backgroundColor: 'lightblue', width: '30vw', height:'80vh',borderStyle: 'solid', display: 'flex', flexDirection: 'column',  justifyContent: 'space-between',alignItems:'center', padding:"20px" }}>
+          <Box sx={{    width: '80%', height:'80%',borderStyle: 'solid', display: 'flex', flexDirection: 'column',  justifyContent: 'space-between',alignItems:'center', padding:"20px" }}>
             <Container sx={{ width: '100%' }}>
               <Grid container spacing={2}>
                 <Grid item  xs={6}>
@@ -271,9 +268,9 @@ function App() {
             </Button>
           </Box>
         </Grid>
-        <Grid item xs={8} sx={{ backgroundColor: 'lightcoral', width: '70vw', height:'100vh' ,display: 'flex',justifyContent: 'center', alignItems: 'center'}}>
-          <Container sx={{ height:'80vh', padding:"20px",display: 'flex', alignItems: 'center' }}>
-            <HighchartsReact highcharts={Highcharts} options={chart} />
+        <Grid item xs={12} sm={8} sx={{  width: '70vw', height:{ xs: '70vh', sm: '100vh' } ,display: 'flex',justifyContent: 'center', alignItems: 'center'}}>
+          <Container sx={{ height:'100%', padding:"20px",display: 'flex', alignItems: 'center' }}>
+            <HighchartsReact highcharts={Highcharts} options={chart}  />
           </Container>
         </Grid>
       </Grid>
