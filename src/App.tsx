@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Checkbox, ListItemText, OutlinedInput, Box, Typography, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
+import { AppBar, FormHelperText, Checkbox, ListItemText, OutlinedInput, Box, Typography, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 
 import './App.css';
@@ -54,6 +54,7 @@ function App() {
 
   const handleChangeOfcategories = (event: SelectChangeEvent<String>) => {
     setSelectedCategory(event.target.value as string);
+    setSelectedProduct([])
     fetchProduct(event.target.value as string)
   };
 
@@ -65,10 +66,12 @@ function App() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+    
   };
 
   const handleChangeOfClean = () => {
     setSelectedCategory('')
+    setProducts([])
     setSelectedProduct([])
   }
   useEffect( () => {
@@ -127,7 +130,7 @@ function App() {
                 <InputLabel id="demo-simple-select-filled-label">Select Product</InputLabel>
                 <Select
                   labelId="demo-multiple-checkbox-label"
-                  id="demo-multiple-checkbox"
+                  id="demo-simple-select-disabled"
                   multiple
                   value={selectedProduct}
                   onChange={handleChangeOfProduct}
@@ -140,6 +143,7 @@ function App() {
                       <ListItemText primary={name.title} />
                     </MenuItem>
                   ))}
+                  {!selectedCategory && <FormHelperText>Disabled</FormHelperText>}
                 </Select>
               </FormControl>
             </Container>
