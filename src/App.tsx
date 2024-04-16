@@ -1,9 +1,10 @@
 import  { useEffect, useState } from 'react';
-import { AppBar, FormHelperText, CircularProgress, Checkbox, ListItemText, OutlinedInput, Box, Typography, Container , Grid, Button,Select, MenuItem,InputLabel, FormControl } from '@mui/material';
+import { Grid } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import axios from 'axios';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import Header from './components/Header';
+import Filter from './components/Filter'
+import Chart from './components/Chart'
 
 interface Product {
   id: number;
@@ -196,9 +197,7 @@ function App() {
 
   return (
     <>
-      <AppBar sx={{ backgroundColor: '#352929', textAlign: 'center', padding: '5px' }}>
-        <Typography variant='h6'>Products Dashboard</Typography>
-      </AppBar>
+      <Header />
       <main>
       <Grid container >
         <Grid item xs={12} sm={4} sx={{
@@ -209,69 +208,23 @@ function App() {
             alignItems: 'center',
             paddingTop:{xs: '60px', sm: '20px'},
           }}>
-          <Box sx={{    width: '80%', height:'80%',borderStyle: 'solid', display: 'flex', flexDirection: 'column',  justifyContent: 'space-between',alignItems:'center', padding:"20px" }}>
-            <Container sx={{ width: '100%' }}>
-              <Grid container spacing={2}>
-                <Grid item  xs={6}>
-                  <h1>Filter</h1>
-                </Grid>
-                <Grid item  xs={6}>
-                  <Button variant="text" onClick={handleChangeOfClean}>clear</Button>
-                </Grid>
-              </Grid>
-              
-              <FormControl variant="standard" sx={{ m: 1, width: '80%' }}>
-                <InputLabel id="demo-simple-select-standard-label">Select Category</InputLabel>
-                <Select
-                  labelId="demo-multiple-name-label"
-                  id="demo-multiple-name"
-                  value={selectedCategory}
-                  onChange={handleChangeOfcategories}
-                  input={<OutlinedInput label="Name" />}
-                >
-                  {categories.map((name) => (
-                    <MenuItem
-                      key={name}
-                      value={name}
-                    >
-                      {name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-
-              <FormControl variant="filled" sx={{ m: 1, width: '80%'}}>
-                <InputLabel id="demo-simple-select-filled-label">Select Product</InputLabel>
-                <Select
-                  labelId="demo-multiple-checkbox-label"
-                  id="demo-simple-select-disabled"
-                  multiple
-                  value={selectedProduct}
-                  onChange={handleChangeOfProduct}
-                  input={<OutlinedInput label="Tag" />}
-                  renderValue={(selected) => selected.join(', ')}
-                >
-                  {products.map((name) => (
-                    <MenuItem key={name.title} value={name.title}>
-                      <Checkbox checked={selectedProduct.indexOf(name.title) > -1} />
-                      <ListItemText primary={name.title} />
-                    </MenuItem>
-                  ))}
-                  {!selectedCategory && <FormHelperText>Disabled</FormHelperText>}
-                </Select>
-              </FormControl>
-            </Container>
-
-            <Button sx={{ width: '80%' }} variant="contained" onClick={runReport} disabled={isLoading || buttonDisabled}>
-              {isLoading ? <CircularProgress size={24} /> : "Run Report"}
-            </Button>
-          </Box>
+          <Filter 
+            handleChangeOfClean={handleChangeOfClean}
+            selectedCategory={selectedCategory}
+            handleChangeOfcategories ={handleChangeOfcategories}
+            categories={categories}
+            selectedProduct={selectedProduct}
+            handleChangeOfProduct={handleChangeOfProduct}
+            products={products}
+            runReport={runReport}
+            buttonDisabled={buttonDisabled}
+            isLoading= {isLoading}
+          />
         </Grid>
         <Grid item xs={12} sm={8} sx={{  width: '70vw', height:{ xs: '70vh', sm: '100vh' } ,display: 'flex',justifyContent: 'center', alignItems: 'center'}}>
-          <Container sx={{ height:'100%', padding:"20px",display: 'flex', alignItems: 'center' }}>
-            <HighchartsReact highcharts={Highcharts} options={chart}  />
-          </Container>
+          <Chart 
+            chart={chart}
+          />
         </Grid>
       </Grid>
       </main>
