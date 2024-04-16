@@ -5,6 +5,8 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import './App.css';
 import {makeStyles} from '@mui/material'
 import axios from 'axios';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 interface Product {
   id: number;
@@ -27,12 +29,89 @@ interface ProductsResponse {
   limit: number;
 }
 
+interface ChartConfig {
+  chart: { type: string };
+  title: { text: string };
+  xAxis: { categories: string[] };
+  yAxis: { title: { text: string } };
+  series: { name: string; data: number[] }[];
+}
+
+const chartOptions = {
+  chart: {
+    type: 'pie'
+  },
+  title: {
+    text: 'categories'
+  },
+  tooltip: {
+    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+  },
+  plotOptions: {
+    pie: {
+      allowPointSelect: true,
+      cursor: 'pointer',
+      dataLabels: {
+        enabled: true,
+        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+      }
+    }
+  },
+  series: [{
+    name: 'Products',
+    colorByPoint: true,
+    data: [
+      { name: 'smartphones', y: 1 },
+      { name: 'laptops', y: 1 },
+      { name: 'fragrances', y: 1 },
+      { name: 'skincare', y: 1 },
+      { name: 'groceries', y: 1 },
+      { name: 'home-decoration', y: 1 },
+      { name: 'furniture', y: 1 },
+      { name: 'womens-dresses', y: 1 },
+      { name: 'womens-shoes', y: 1 },
+      { name: 'mens-shoes', y: 1 },
+      { name: 'mens-watches', y: 1 },
+      { name: 'womens-watches', y: 1 },
+      { name: 'womens-bags', y: 1 },
+      { name: 'womens-jewellery', y: 1 },
+      { name: 'sunglasses', y: 1 },
+      { name: 'automotive', y: 1 },
+      { name: 'motorcycle', y: 1 },
+      { name: 'lighting', y: 1 },
+    ]
+  }]
+};
+
+const columnChart = {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Products in selected Category'
+  },
+  xAxis: {
+    categories: [] as string[]
+  },
+  yAxis: {
+    title: {
+        text: ''
+    }
+  },
+  series: [{
+    name: 'Price',
+    data: []  as number[]
+  }]
+}
+
+
 function App() {
 
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<string[]>([]);
+  const [ chart, setChart ] = useState<any>(chartOptions)
 
   const fetchCategories = async() => {
     await axios.get('https://dummyjson.com/products/categories')
@@ -63,9 +142,9 @@ function App() {
       target: { value },
     } = event;
     setSelectedProduct(
-      // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+    console.log(selectedProduct)
     
   };
 
@@ -73,7 +152,35 @@ function App() {
     setSelectedCategory('')
     setProducts([])
     setSelectedProduct([])
+    setChart(chartOptions)
   }
+
+  const runReport = () => {
+    const data: number[] = []
+    if (selectedProduct.length === 0) {
+      const pro: string[] = []
+      products.forEach( cat => {
+        data.push(cat.price)
+        pro.push(cat.title)
+      })
+      columnChart.xAxis.categories = pro
+    } else {
+      selectedProduct.forEach( val => {
+        products.forEach( cat => {
+          if( val == cat.title) {
+            data.push(cat.price)
+          }
+        })
+      })
+      columnChart.xAxis.categories = selectedProduct
+    }
+    columnChart.series[0].data = data
+    columnChart.yAxis.title.text = selectedCategory
+
+    console.log(columnChart)
+    setChart({...columnChart})
+  }
+
   useEffect( () => {
     fetchCategories()
   }, [])
@@ -81,9 +188,9 @@ function App() {
 
   return (
     <>
-      {/* <AppBar sx={{ backgroundColor: '#352929', textAlign: 'center', padding: '5px' }}>
+      <AppBar sx={{ backgroundColor: '#352929', textAlign: 'center', padding: '5px' }}>
         <Typography variant='h6'>Products Dashboard</Typography>
-      </AppBar> */}
+      </AppBar>
       <main>
       <Grid container >
         <Grid item xs={4} sx={{
@@ -148,12 +255,13 @@ function App() {
               </FormControl>
             </Container>
 
-            <Button sx={{  width: '80%'}} variant="contained">Run Report</Button>
+            <Button sx={{  width: '80%'}} variant="contained" onClick={runReport}>Run Report</Button>
           </Box>
         </Grid>
-        <Grid item xs={8} sx={{ backgroundColor: 'lightcoral', width: '70vw', height:'100vh' }}>
-          {/* Replace 'xs=4' with appropriate content or remove this line */}
-          <h1>hi</h1>
+        <Grid item xs={8} sx={{ backgroundColor: 'lightcoral', width: '70vw', height:'100vh' ,display: 'flex',justifyContent: 'center', alignItems: 'center'}}>
+          <Container sx={{ height:'80vh', padding:"20px",display: 'flex', alignItems: 'center' }}>
+            <HighchartsReact highcharts={Highcharts} options={chart} />
+          </Container>
         </Grid>
       </Grid>
       </main>
