@@ -42,10 +42,8 @@ const Filter: React.FC<FilterProps> = ({
             </Grid>
             
             <FormControl variant="standard" sx={{ m: 1, width: '80%' }}>
-            <InputLabel id="demo-simple-select-standard-label">Select Category</InputLabel>
+            <InputLabel >Select Category</InputLabel>
             <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
                 value={selectedCategory}
                 onChange={ handleChangeOfcategories}
                 input={<OutlinedInput label="Name" />}
@@ -63,7 +61,7 @@ const Filter: React.FC<FilterProps> = ({
 
 
             <FormControl variant="filled" sx={{ m: 1, width: '80%'}}>
-            <InputLabel id="demo-simple-select-filled-label">Select Product</InputLabel>
+            <InputLabel>Select Product</InputLabel>
             <Select
                 multiple
                 value={selectedProduct}
